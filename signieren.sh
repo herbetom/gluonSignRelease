@@ -6,6 +6,10 @@
 #   - sign.sh und sigtest.sh aus dem Gluon Repo (https://github.com/freifunk-gluon/gluon/tree/master/contrib)
 #     (liegen im Ordner gluonContrib und lassen sich durch ausführen von update.sh updaten)
 
+if [ ! -f "config.sh" ]; then
+    printf "estelle dir eine config.sh. Ein Beispiel ist in config-example.sh zu finden.\n"
+    exit;
+fi
 source config.sh
 PATH_TO_SECRET_SIG_KEY='secret-temp'
 FIRMWARESERVER_MOUNTPOINT='firmwareserver-mount'
