@@ -4,8 +4,7 @@
 #   - sshfs
 #   - ecdsautils (https://github.com/tcatm/ecdsautils)
 #   - sign.sh und sigtest.sh aus dem Gluon Repo (https://github.com/freifunk-gluon/gluon/tree/master/contrib)
-#     herunterladen und am besten in /usr/bin ablegen. Dann ausführbar machen.
-#     
+#     (liegen im Ordner gluonContrib und lassen sich durch ausführen von update.sh updaten)
 
 source config.sh
 PATH_TO_SECRET_SIG_KEY='secret-temp'
@@ -46,17 +45,25 @@ if [ -s "$PATH_TO_SECRET_SIG_KEY" ]
 then 
     for b in $BRANCHES
     do
-        ./gluonContrib/sign.sh $PATH_TO_SECRET_SIG_KEY $FIRMWARESERVER_MOUNTPOINT/$VERSION/images/sysupgrade/$b-$VERSION.manifest
-        ./gluonContrib/sigtest.sh $PUBLIC_SIG_KEY $FIRMWARESERVER_MOUNTPOINT/$VERSION/images/sysupgrade/$b-$VERSION.manifest
+	./gluonContrib/sigtest.sh $PUBLIC_SIG_KEY $FIRMWARESERVER_MOUNTPOINT/$VERSION/images/sysupgrade/$b-$VERSION.manifest
         
         RESULT=$?
+        if [ $RESULT -eq 0 ] ; then
+            printf "$VERSION ist bereits durch dich als $b signiert." 
+        else  
 
-        if [ $RESULT -eq 1 ] ; then
-            printf "Signieren von Version $VERSION als $b fehlgeschlagen!\n";
-        elif [ $RESULT -eq 0 ] ; then
-            printf "Signieren von Version $VERSION als $b erfolgreich!\n";
-        else
-            printf "Signieren von Version $VERSION als $b fehlgeschlagen mit Fehlercode $? !\n";
+            ./gluonContrib/sign.sh $PATH_TO_SECRET_SIG_KEY $FIRMWARESERVER_MOUNTPOINT/$VERSION/images/sysupgrade/$b-$VERSION.manifest
+            ./gluonContrib/sigtest.sh $PUBLIC_SIG_KEY $FIRMWARESERVER_MOUNTPOINT/$VERSION/images/sysupgrade/$b-$VERSION.manifest
+
+            RESULT=$?
+
+            if [ $RESULT -eq 1 ] ; then
+                printf "Signieren von Version $VERSION als $b fehlgeschlagen!\n";
+            elif [ $RESULT -eq 0 ] ; then
+                printf "Signieren von Version $VERSION als $b erfolgreich!\n";
+            else
+                printf "Signieren von Version $VERSION als $b fehlgeschlagen mit Fehlercode $? !\n";
+            fi
         fi
     done
 fi
