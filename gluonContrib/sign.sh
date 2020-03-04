@@ -41,4 +41,4 @@ ecdsasign "$upper" < "$SECRET" >> "$lower"
 	cat  "$upper"
 	echo ---
 	cat  "$lower"
-) > "$manifest" 
+) > "$manifest"

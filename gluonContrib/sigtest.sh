@@ -36,4 +36,4 @@ do
 done < "$lower"
 
 rm -f "$upper" "$lower"
-exit $ret 
+exit $ret
