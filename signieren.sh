@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # basiert auf https://github.com/FreiFunkMuenster/tools/blob/master/signieren.sh
 # benötigt:
 #   - sshfs
@@ -29,9 +30,9 @@ mkdir -p $FIRMWARESERVER_MOUNTPOINT
 sshfs $FIRMWARESERVER_OPTIONS $FIRMWARESERVER_HOST:$FIRMWARESERVER_PATH $FIRMWARESERVER_MOUNTPOINT
 
 echo "possible versions: "
-ls -td -- $FIRMWARESERVER_MOUNTPOINT/*-*/ | cut -d'/' -f2
+ls -td -- $FIRMWARESERVER_MOUNTPOINT/*.*.*/ | cut -d'/' -f2
 
-read -p "Version: " -e -i "$(ls -td -- $FIRMWARESERVER_MOUNTPOINT/*-*/ | head -n 1 | cut -d'/' -f2)" VERSION
+read -p "Version: " -e -i "$(ls -td -- $FIRMWARESERVER_MOUNTPOINT/*.*.*/ | head -n 1 | cut -d'/' -f2)" VERSION
 if [ "$VERSION" = "" ] ; then
     printf "Du musst eine Version angeben!";
     cleanupAndExit
